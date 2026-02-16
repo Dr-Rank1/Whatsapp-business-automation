@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WhatsApp Business Automation</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      width: 360px;
+      min-height: 400px;
+      background: #f8f9fa;
+    }
+    
+    .container {
+      padding: 16px;
+    }
+    
+    /* Header */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      background: #25D366;
+      color: white;
+    }
+    
+    .header h1 {
+      font-size: 16px;
+      font-weight: 600;
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .logo-icon {
+      width: 24px;
+      height: 24px;
+      background: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #25D366;
+      font-weight: bold;
+    }
+    
+    /* Login Form */
+    #loginForm {
+      display: none;
+      padding: 24px;
+    }
+    
+    #loginForm.active {
+      display: block;
+    }
+    
+    .login-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #1a1a1a;
+    }
+    
+    .login-subtitle {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 20px;
+    }
+    
+    .form-group {
+      margin-bottom: 16px;
+    }
+    
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: #333;
+      margin-bottom: 6px;
+    }
+    
+    .form-group input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: border-color 0.2s;
+    }
+    
+    .form-group input:focus {
+      outline: none;
+      border-color: #25D366;
+    }
+    
+    .btn {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    
+    .btn-primary {
+      background: #25D366;
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background: #128C7E;
+    }
+    
+    .btn-primary:disabled {
+      background: #a8dac8;
+      cursor: not-allowed;
+    }
+    
+    .btn-secondary {
+      background: #f0f0f0;
+      color: #333;
+      margin-top: 12px;
+    }
+    
+    .btn-secondary:hover {
+      background: #e0e0e0;
+    }
+    
+    .error-message {
+      background: #fee2e2;
+      color: #dc2626;
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      margin-bottom: 16px;
+      display: none;
+    }
+    
+    .error-message.show {
+      display: block;
+    }
+    
+    /* Dashboard */
+    #dashboard {
+      display: none;
+    }
+    
+    #dashboard.active {
+      display: block;
+    }
+    
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px;
+      background: white;
+      border-radius: 12px;
+      margin-bottom: 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+    
+    .user-avatar {
+      width: 44px;
+      height: 44px;
+      background: #e8f5e9;
+      color: #25D366;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 600;
+    }
+    
+    .user-details {
+      flex: 1;
+    }
+    
+    .user-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+    
+    .user-email {
+      font-size: 12px;
+      color: #666;
+    }
+    
+    .subscription-badge {
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    
+    /* Usage Card */
+    .usage-card {
+      background: white;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+    
+    .usage-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    
+    .usage-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+    
+    .usage-text {
+      font-size: 13px;
+      color: #666;
+    }
+    
+    .usage-bar {
+      height: 6px;
+      background: #e5e7eb;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    
+    .usage-bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.3s;
+    }
+    
+    /* Upgrade Banner */
+    .upgrade-banner {
+      display: none;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 14px;
+      border-radius: 12px;
+      margin-bottom: 16px;
+      cursor: pointer;
+    }
+    
+    .upgrade-banner.show {
+      display: block;
+    }
+    
+    .upgrade-banner h3 {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    
+    .upgrade-banner p {
+      font-size: 12px;
+      opacity: 0.9;
+    }
+    
+    /* Quick Send */
+    .quick-send {
+      background: white;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+    
+    .quick-send-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin-bottom: 12px;
+    }
+    
+    .quick-send select,
+    .quick-send input,
+    .quick-send textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+    
+    .quick-send textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+    
+    .quick-send select:focus,
+    .quick-send input:focus,
+    .quick-send textarea:focus {
+      outline: none;
+      border-color: #25D366;
+    }
+    
+    .quick-send-error {
+      color: #dc2626;
+      font-size: 12px;
+      margin-bottom: 10px;
+      display: none;
+    }
+    
+    .quick-send-error.show {
+      display: block;
+    }
+    
+    .quick-send-success {
+      color: #059669;
+      font-size: 12px;
+      margin-bottom: 10px;
+      display: none;
+    }
+    
+    .quick-send-success.show {
+      display: block;
+    }
+    
+    /* Actions */
+    .actions {
+      display: flex;
+      gap: 8px;
+    }
+    
+    .action-btn {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #e5e7eb;
+      background: white;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .action-btn:hover {
+      background: #f9fafb;
+      border-color: #d1d5db;
+    }
+    
+    .action-btn.logout {
+      color: #dc2626;
+      border-color: #fecaca;
+    }
+    
+    .action-btn.logout:hover {
+      background: #fef2f2;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="logo">
+      <div class="logo-icon">W</div>
+      <h1>WhatsApp Automation</h1>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- Login Form -->
+    <div id="loginForm">
+      <div class="login-title">Welcome Back</div>
+      <div class="login-subtitle">Sign in to continue automating</div>
+      
+      <div id="loginError" class="error-message"></div>
+      
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" id="username" placeholder="Enter your username">
+      </div>
+      
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="password" placeholder="Enter your password">
+      </div>
+      
+      <button id="loginBtn" class="btn btn-primary">Sign In</button>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboard">
+      <!-- User Info -->
+      <div class="user-info">
+        <div class="user-avatar" id="userAvatar">U</div>
+        <div class="user-details">
+          <div class="user-name" id="userName">User</div>
+          <div class="user-email" id="userEmail">user@example.com</div>
+        </div>
+        <span class="subscription-badge" id="subscriptionBadge">Free</span>
+      </div>
+
+      <!-- Usage -->
+      <div class="usage-card">
+        <div class="usage-header">
+          <span class="usage-title">Message Usage</span>
+          <span class="usage-text" id="usageText">0 of 100 remaining</span>
+        </div>
+        <div class="usage-bar">
+          <div class="usage-bar-fill" id="usageBar" style="width: 0%"></div>
+        </div>
+      </div>
+
+      <!-- Upgrade Banner -->
+      <div id="upgradeBanner" class="upgrade-banner">
+        <h3>🚀 Upgrade to Pro</h3>
+        <p>Unlock unlimited messages and advanced features</p>
+      </div>
+
+      <!-- Quick Send -->
+      <div class="quick-send" id="quickSendSection" style="display: none;">
+        <div class="quick-send-title">Quick Send Message</div>
+        
+        <div class="quick-send-error" id="quickSendError"></div>
+        <div class="quick-send-success" id="quickSendSuccess"></div>
+        
+        <select id="templatesSelect">
+          <option value="">Select a template...</option>
+        </select>
+        
+        <input type="tel" id="quickPhoneInput" placeholder="Phone number (e.g., +1234567890)">
+        
+        <textarea id="quickMessageInput" placeholder="Type your message..."></textarea>
+        
+        <button id="quickSendBtn" class="btn btn-primary">Send Message</button>
+      </div>
+
+      <!-- Actions -->
+      <div class="actions">
+        <button id="openDashboard" class="action-btn">📊 Dashboard</button>
+        <button id="logoutBtn" class="action-btn logout">Logout</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
