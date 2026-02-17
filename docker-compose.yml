@@ -26,11 +26,11 @@ services:
     environment:
       - DJANGO_DEBUG=False
       - ALLOWED_HOSTS=localhost,frontend
-      - MYSQL_HOST=db
-      - MYSQL_PORT=3306
-      - MYSQL_DATABASE=whatsapp_automation
-      - MYSQL_USER=whatsapp_user
-      - MYSQL_PASSWORD=whatsapp_pass
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_NAME=whatsapp_automation
+      - DB_USER=whatsapp_user
+      - DB_PASSWORD=whatsapp_pass
       - REDIS_URL=redis://redis:6379/0
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_RESULT_BACKEND=redis://redis:6379/0
@@ -79,7 +79,7 @@ services:
     command: celery -A whatsapp_api worker -l info -c 2
     environment:
       - DJANGO_DEBUG=False
-      - MYSQL_HOST=db
+      - DB_HOST=db
       - REDIS_URL=redis://redis:6379/0
       - CELERY_BROKER_URL=redis://redis:6379/0
     depends_on:
@@ -99,7 +99,7 @@ services:
     command: celery -A whatsapp_api beat -l info
     environment:
       - DJANGO_DEBUG=False
-      - MYSQL_HOST=db
+      - DB_HOST=db
       - REDIS_URL=redis://redis:6379/0
     depends_on:
       - backend
